@@ -1,0 +1,40 @@
+
+👉 Source Code: https://greatstack.dev/p/prescripto-f...
+👉 Live Preview: https://prescripto.vercel.app/
+👉 Download the assets: https://greatstack.dev/assets/prescri...
+👉 Figma Design: https://greatstack.dev/go/figma-presc...
+
+
+
+00:00 Project Overview
+08:14 Create a React Project
+12:30 Add Tailwind CSS In React Project
+17:17 Create Components and Pages in React project
+28:40 Create Home Page
+01:49:51 Create All Doctors Page
+02:08:54 Create Doctor Appointment Page
+03:03:26 Create About and Contact Page
+03:20:12 Create Login Page
+03:36:12 Create Patient Profile page
+04:04:44 Create Appointments page for patients
+04:17:18 Make the website responsive
+04:35:07 Create Backend Server
+05:00:23 Create MongoDB model to store Doctors Data and User Data
+05:13:23 Create API to add Doctor data in Database
+05:46:44 Create API for Admin Login
+06:03:57 Create Admin Panel
+07:29:29: Create Add doctor functionality in Admin Panel
+07:57:34 Display all doctors list in Admin panel
+08:29:53 Display all doctors on frontend website from Database
+08:43:18 Create Patient Login and Registration system
+09:25:34 Display and update patient profile data on website
+10:15:45 Create Appointment Booking Functionality
+10:56:03 Display Booked appointments on Website
+11:13:58 Create Appointment Cancellation Feature for Patient
+11:34:13 Integrate Online payment gateway to make online payment
+12:14:57 Display and Manage Appointment for Admin panel
+12:49:48 Create Dashboard Page for admin panel
+13:17:32 Create doctor panel ( doctor dashboard )
+13:41:31 Display and manage appointments in Doctor panel
+14:33:07 Create Dashboard page for Doctor panel
+14:53:25 Display and Update profile data In Doctor panel
