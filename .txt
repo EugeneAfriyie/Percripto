@@ -8,7 +8,7 @@
 
 00:00 Project Overview
 08:14 Create a React Project
-12:30 Add Tailwind CSS In React Project
+12:30 Add Tailwind CSS In React Project    
 17:17 Create Components and Pages in React project
 28:40 Create Home Page
 01:49:51 Create All Doctors Page
