@@ -4,6 +4,6 @@
   --color-primary: #5f6FFF;
 }
 
-.active hr, a.active hr, a[aria-current="page"] hr {
+.active hr{
   @apply block;
 }
