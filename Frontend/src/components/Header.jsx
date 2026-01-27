@@ -1,5 +1,6 @@
 import React from 'react'
-import { assets } from '../assets/assets_frontend/assets'
+import { assets, specialityData } from '../assets/assets_frontend/assets'
+import { Link } from 'react-router-dom'
 
 const Header = () => {
   return (
@@ -25,6 +26,8 @@ const Header = () => {
         <div className="md:w-1/2 relative">
             <img className='w-full md:absolute bottom-0 rounded-lg' src={assets.header_img} alt="" />
         </div>
+
+        
     </div>
   )
 }
