@@ -11,3 +11,10 @@
 ::-webkit-scrollbar{
   @apply hidden;
 }
+
+@theme {
+  --grid-cols-auto: repeat(auto-fill, minmax(200px, 1fr));
+}
+.grid-cols-auto {
+  grid-template-columns: var(--grid-cols-auto);
+}
