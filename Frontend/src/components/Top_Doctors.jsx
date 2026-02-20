@@ -12,7 +12,7 @@ const {doctors} = useContext(AppContext);
         <h1 className='text-3xl font-medium '>
             Top  Doctors to Book
         </h1>
-        <p className=' sm:w-1/3 text-center text-sm'>
+        <p className=' sm:w-1/3 text-center text-sm'> 
             Simply browse through our extensive list of trusted doctors
         </p>
 
