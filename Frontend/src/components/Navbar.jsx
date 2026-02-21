@@ -10,7 +10,7 @@ const Navbar = () => {
     const [token, setToken] = useState(true)
   return (
     <div className='flex justify-between items-center text-sm mb-5 border-b-gray-400 border-b py-4'>
-        <img src={assets.logo} alt="logo" className='w-44 cursor-pointer' />
+        <img onClick={() =>{ navigate('/')}} src={assets.logo} alt="logo" className='w-44 cursor-pointer' />
         <ul className='hidden md:flex  items-start gap-5  font-medium uppercase'>
             <NavLink to='/'>
                 <li className='py-1'>Home</li>
