@@ -6,6 +6,7 @@ import { assets } from '../assets/assets_frontend/assets'
 const Appointment = () => {
   const {docId} = useParams()
   const {doctors,currencySymbol} = useContext(AppContext)
+  const dayOfWeek = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
 
   const [docInfo,setDocInfo] = useState(null)
   const [docSlots,setDocSlots] = useState([])
@@ -66,12 +67,9 @@ useEffect(()=>{
 },[docSlots])
 
 
-
-
-
 useEffect(() =>{
   getAvailableSlots()
-},docInfo)
+},[docInfo])
 
 
   useEffect(() =>{
@@ -117,6 +115,34 @@ useEffect(() =>{
 
         </div>
 
+      </div>
+
+
+      {/* Booking slot */}
+      <div className="sm:ml-72 sm:pl-4 mt-4 font-medium text-gray-700">
+        <p>Booking Slots</p>
+        <div className=" flex gap-3 items-center w-full overflow-x-scroll mt-4">
+          {
+            docSlots.length && docSlots.map((item,index) =>(
+              
+              <div onClick={() => setSlotIndex(index)} className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex ===        index ? 'bg-primary text-white' : 'border border-gray-300 '}`} key={index}>
+                <p>{item[0] && dayOfWeek[item[0].datetime.getDay() ]}</p>
+                <p>
+                  {item[0] && item[0].datetime.getDate()}
+                </p>
+              </div>
+            ))
+          }
+        </div>
+
+        <div className="flex gap-3 w-full items-center overflow-x-scroll mt-4">
+          {docSlots.length && docSlots[slotIndex].map((item,index)=>(
+            <p onClick={() => setSlotTime(item.time)} className={`text-sm font-light shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? 'bg-primary text-white' : 'border border-gray-300 text-gray-400'}`} key={index}>
+              {item.time}
+            </p>
+          )) }
+        </div>
+        <button className=' bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 cursor-pointer'>Bok an Appointment</button>
       </div>
     </div>
   )
