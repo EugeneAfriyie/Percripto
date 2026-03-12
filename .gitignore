@@ -1,0 +1,27 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Environment variables (CRITICAL: Never share your Cloudinary/MongoDB secrets)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Optional: Build directories (if you use TypeScript or a frontend)
+dist/
+build/
+
+# Uploads directory (if saving files locally before Cloudinary)
+public/uploads/
+temp/
