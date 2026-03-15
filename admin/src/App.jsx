@@ -1,8 +1,10 @@
-import React from 'react'
+import Login from './pages/Login'
 
 const App = () => {
   return (
-    <div className='bg-gray-950'>App</div>
+    <div className=' '>
+      <Login />
+    </div>
   )
 }
 
