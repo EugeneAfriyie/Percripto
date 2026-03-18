@@ -7,6 +7,8 @@ import Sidebar from './components/Sidebar'
 import { Route, Routes } from 'react-router-dom'
 import AddDoc from './pages/admin/AddDoc'
 import DocList from './pages/admin/DocList'
+import DashBoard from './pages/admin/DashBoard'
+import AllAppointment from './pages/admin/AllAppointment'
 
 const App = () => {
   const { adminToken } = useContext(AdminContext)
@@ -24,19 +26,17 @@ const App = () => {
       />
 
       <Navbar />
-      <Sidebar />
-
+      <div className="flex items-start">
+        <Sidebar />
       <Routes>
-
         <Route path='/' element={<></> } />
-        <Route path='/admin_dashboard' element={<Dash />} />
+        <Route path='/admin_dashboard' element={<DashBoard />} />
         <Route path='/all-appointment' element={<AllAppointment />} />
         <Route path='/add_doctor' element={<AddDoc />} />
         <Route path='/doc_list' element={<DocList />} />
-
-        
-
       </Routes>
+      </div>
+
 
 
     </div> 
