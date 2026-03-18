@@ -14,7 +14,7 @@ const Contact = () => {
         <div className=" flex flex-col justify-center gap-6">
           <p className='font-semibold text-lg text-gray-600'> Our Office </p>
           <p className='text-gray-500'> 547003 Willans Station <br /> Offinso Ghana </p>
-          <p className='text-gray-500'>Tel: (414) 555-1234 <br /> Email: groupeight00@gmail.com</p>
+          <p className=' text-gray-500'>Tel: (414) 555-1234 <br /> Email: groupeight00@gmail.com</p>
           <p>Career at PRECRIPTION</p>
           <p className='text-gray-500'>Learn more about teams and job openings.</p>
           <button className='border border-black px-8 py-4 text-sm hover:bg-black hover:text-white transition-all duration-500 cursor-pointer'>Explore Job</button>
