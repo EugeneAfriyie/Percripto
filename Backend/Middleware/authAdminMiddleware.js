@@ -4,6 +4,7 @@ const authAdminMiddleware =  async (req, res, next) => {
     try {
 
         const {admintoken} = req.headers
+        console.log(admintoken)
         if (!admintoken) {
             return res.status(401).json({ success: false, message: 'No token provided' });
         }
@@ -12,7 +13,7 @@ const authAdminMiddleware =  async (req, res, next) => {
             return res.status(401).json({ success: false, message: 'Invalid token' });
         }
 
-        if (decoded !== process.env.ADMIN_EMAIL+process.env.ADMIN_PASSWORD) {
+        if (decoded.email !== process.env.ADMIN_EMAIL) {
             return res.status(403).json({ success: false, message: 'Forbidden: Not an admin' });
         }
 
