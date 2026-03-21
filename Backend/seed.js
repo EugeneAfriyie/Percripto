@@ -11,7 +11,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '4 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 50,
+        fees: 50,
         address: { line1: '17th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -20,7 +20,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '3 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 60,
+        fees: 60,
         address: { line1: '27th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -29,7 +29,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '1 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 30,
+        fees: 30,
         address: { line1: '37th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -38,7 +38,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '2 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 40,
+        fees: 40,
         address: { line1: '47th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -47,7 +47,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '4 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 50,
+        fees: 50,
         address: { line1: '57th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -56,7 +56,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '4 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 50,
+        fees: 50,
         address: { line1: '57th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -65,7 +65,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '4 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 50,
+        fees: 50,
         address: { line1: '17th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -74,7 +74,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '3 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 60,
+        fees: 60,
         address: { line1: '27th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -83,7 +83,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '1 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 30,
+        fees: 30,
         address: { line1: '37th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -92,7 +92,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '2 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 40,
+        fees: 40,
         address: { line1: '47th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -101,7 +101,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '4 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 50,
+        fees: 50,
         address: { line1: '57th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -110,7 +110,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '4 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 50,
+        fees: 50,
         address: { line1: '57th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -119,7 +119,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '4 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 50,
+        fees: 50,
         address: { line1: '17th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -128,7 +128,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '3 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 60,
+        fees: 60,
         address: { line1: '27th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     },
     {
@@ -137,7 +137,7 @@ const doctorsList = [
         degree: 'MBBS',
         experience: '1 Years',
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fee: 30,
+        fees: 30,
         address: { line1: '37th Cross, Richmond', line2: 'Circle, Ring Road, London' }
     }
 ];

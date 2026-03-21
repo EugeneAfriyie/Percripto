@@ -83,6 +83,17 @@ const addDoctor = async (req, res ) =>{
     }
 }
 
+// API TO GET ALL DOCTORS
+const allDoctors = async (req,res) =>{
+    try {
+        const doctors = await doctorModel.find({}).select('-password');
+        res.json({ success: true, doctors });
+    } catch (error) {
+        console.error('Error fetching doctors:', error);
+        res.status(500).json({ success: false, message: error.message || 'Server error' });
+    }
+}
+
 // api for admin login 
 
 const adminLogin = async (req, res) => {
