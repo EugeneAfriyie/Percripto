@@ -142,4 +142,4 @@ if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD
     }
 }
 
-export  {addDoctor,adminLogin}; 
+export  {addDoctor,adminLogin,allDoctors}; 

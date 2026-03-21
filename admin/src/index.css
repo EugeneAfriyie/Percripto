@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Diplomata&family=Ewert&family=Outfit:wght@100..900&family=Rubik+Glitch+Pop&family=Rubik+Iso&display=swap');
+
+
+*{
+  font-family: Outfit;
+}
+
 
 
 
