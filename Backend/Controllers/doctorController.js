@@ -27,4 +27,22 @@ const changeAvailability = async (req, res) => {
   }
 }
 
-export { changeAvailability }
+const doctorList = async (req, res) => {
+  try {
+    const doctors = await doctorModel.find({}).select(['-password', '-email']);
+    console.log("Doctors List Fetched Successfully", doctors);
+
+
+    res.json({
+      success:true,
+      doctors,
+      message: 'Doctors List Fetched Successfully'
+    })
+    
+  } catch (error) {
+    console.log('Error fetching doctor list:', error);
+    res.status(500).json({ success: false, message: error.message || 'Server error' });
+  }
+}
+
+export { changeAvailability,doctorList }
