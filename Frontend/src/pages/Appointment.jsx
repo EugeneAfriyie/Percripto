@@ -112,7 +112,7 @@ useEffect(() =>{
               <p className=' text-sm text-gray-500 max-w-[700] mt-1'>{docInfo.about}</p>
             </div>
 
-            <p className='text-gray-500  font-medium mt-4'>Appointment Fee:  <span className='text-gray-600'>{currencySymbol}{docInfo.fees}</span></p>
+            <p className='text-gray-500  font-medium mt-4'>Appointment Fee:  <span className='text-gray-600'>{currencySymbol}{docInfo.fee}</span></p>
 
         </div>
 
