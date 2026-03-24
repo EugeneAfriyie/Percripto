@@ -140,7 +140,13 @@ const updateUser = async (req, res) => {
     }
 
     // Update user
-    const updatedUser = await userModel.findByIdAndUpdate(userId, updateData, { new: true });
+    // const updatedUser = await userModel.findByIdAndUpdate(userId, updateData, { new: true });
+
+    const updatedUser = await userModel.findByIdAndUpdate(
+  userId,
+  updateData,
+  { returnDocument: "after" }
+);
 
     res.json({ success: true, message: "User profile updated", user: updatedUser });
 
