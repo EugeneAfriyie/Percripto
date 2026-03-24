@@ -1,13 +1,14 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-// Load environment variables from .env file
 dotenv.config();
 
 const connectDB = async () => {
+
+
     // 1. Setup the listener first
     mongoose.connection.on("connected", () => {
-        console.log("✅ MongoDB connected successfully to Prescripto_Project");
+        console.log("✅ MongoDB connected successfully to MediApo_Project");
     });
 
     mongoose.connection.on("error", (err) => {
@@ -16,7 +17,8 @@ const connectDB = async () => {
 
     try {
         // 2. Attempt the connection
-        await mongoose.connect(`${process.env.MONGODB_URL}/Prescripto_Project`);
+        await mongoose.connect(`${process.env.MONGODB_URL}/mediApo_Project`);
+        
     } catch (error) {
         console.error("Critical Error: Could not connect to MongoDB", error);
         process.exit(1); // Stop the app if the DB fails

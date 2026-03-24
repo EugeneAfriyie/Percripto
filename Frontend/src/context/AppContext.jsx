@@ -12,6 +12,8 @@ const AppContextProvider = (props) => {
     const [doctors, setDoctors] = useState([]);
     // Fallback to localhost:5000 if the .env variable is missing
     const backendUrl = import.meta.env.VITE_BACKEND_URL ;
+    const [token, setToken] = useState('');
+
 
     const getDocList = async () => {
         try {
@@ -38,7 +40,7 @@ const AppContextProvider = (props) => {
 
 
     const value = {
-        doctors,currencySymbol
+        doctors,currencySymbol,token,setToken,backendUrl
     }
 
     return (

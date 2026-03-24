@@ -65,7 +65,7 @@ const loginuser = async (req, res) => {
             return res.json({ success: false, message: 'Invalid email format' });
         }
 
-        if (password.length < 8) {
+        if (password.length < 8) {_
             return res.json({success: false, message: 'Password must be at least 8 characters long'})
         } 
         

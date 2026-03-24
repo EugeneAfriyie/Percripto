@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { AppContext } from '../context/AppContext'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const Login = () => {
 
@@ -6,12 +9,42 @@ const Login = () => {
   const [email,setEmail] = React.useState("")
   const [password,setPassword] = React.useState("")
   const [name,setName] = React.useState("")
+  const {backendUrl,token,setToken} = useContext(AppContext)
 
   const onSubmit = async(e) => {
     e.preventDefault()
-    if(state === "Sign up"){
-      console.log("Signing up with", name, email, password)
-    }
+      try {
+        if (state === "Sign up") {
+          const { data } = await axios.post(backendUrl + "/api/user/register", {
+            name,
+            email,
+            password
+          })
+          if (data.success) {
+            localStorage.setItem("token", data.token)
+            setToken(data.token)
+          } else {
+            toast.error(data.message)
+          }
+          }else{
+             const { data } = await axios.post(backendUrl + "/api/user/login", {
+            email,
+            password 
+          })
+          if (data.success) {
+            localStorage.setItem("token", data.token)
+            setToken(data.token)
+          } else {
+            toast.error(data.message)
+          }
+          }
+        
+
+        
+      } catch (error) {
+        console.log(error)
+        toast.error(error.message)
+      }
   }
 
   return (
@@ -42,7 +75,7 @@ const Login = () => {
           <input className='border border-zinc-300 rounded w-full p-2 mt-1 ' required onChange={(e) => setPassword(e.target.value)} value={password} type="password" />
         </div>
 
-        <button className='bg-primary text-white w-full py-2 rounded-md text-base cursor-pointer'>{state === "Sign up" ? "Create Account" : "Login"}</button>
+        <button type='submit' className='bg-primary text-white w-full py-2 rounded-md text-base cursor-pointer'>{state === "Sign up" ? "Create Account" : "Login"}</button>
 
         {state === "Sign up" ?
           <p className='text-sm text-gray-500'>Already have an account? <span onClick={() => setState("Login")} className='text-primary cursor-pointer'>Login</span></p>

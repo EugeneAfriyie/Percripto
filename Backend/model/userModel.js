@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     address: { type: Object, default: {line1:"",line2: ''} }, 
     gender: { type: String, default: "Not specified" },
     DOB: { type: String, default: "Not specified" },
-    phone:{ type: String, default: "0000000000" },
+    phone:{ type: String, default: "2330000000" },
 });
 
 // This check prevents error: "OverwriteModelError: Cannot overwrite `user` model once compiled."
