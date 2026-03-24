@@ -97,5 +97,57 @@ const loginuser = async (req, res) => {
     }
 }
 
-export { registeruser };
-export { loginuser };
+// API TO GET USER DETAILS
+const getUserDetails = async (req, res) => {
+    try {
+      const  userId = req.user;
+      console.log(userId)
+      const user = await userModel.findById(userId).select('-password');
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' , userId: "user not found" + userId});
+      }
+      res.json({ success: true, user });
+      
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+const updateUser = async (req, res) => {
+  try {
+    const userId = req.user; // get from auth middleware
+    let { name, address, phone, DOB, gender } = req.body;
+    const imagefile = req.file;
+
+    if (!name || !address || !phone || !DOB || !gender) {
+      return res.json({ success: false, message: "All fields are required" });
+    }
+
+    // ensure address is object
+    address = typeof address === "string" ? JSON.parse(address) : address;
+
+    // Prepare update data
+    const updateData = { name, address, phone, DOB, gender };
+
+    // Upload new image if provided
+    if (imagefile) {
+      const uploadimg = await cloudinary.uploader.upload(imagefile.path, {
+        folder: "doctors",
+        resource_type: "image",
+      });
+      updateData.image = uploadimg.secure_url;
+    }
+
+    // Update user
+    const updatedUser = await userModel.findByIdAndUpdate(userId, updateData, { new: true });
+
+    res.json({ success: true, message: "User profile updated", user: updatedUser });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export { registeruser, loginuser, getUserDetails, updateUser };
