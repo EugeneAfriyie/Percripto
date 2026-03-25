@@ -89,8 +89,13 @@ useEffect(() =>{
      if(!token){
          toast.warn("Login to Book Appointment")
         return  navigate('/login')
-
      }
+
+     if(!slotTime){
+         toast.warn("Please select a time slot")
+         return
+     }
+
     try {
         const date  = docSlots[slotIndex][0].datetime
         let day = date.getDate()
@@ -103,7 +108,7 @@ useEffect(() =>{
      if(data.success){
         toast.success(data.message)
         getDocList()
-        navigate('/my-appointment')
+        navigate('/my_appointment')
      }else{
         toast.error(data.message)
      }
@@ -111,7 +116,7 @@ useEffect(() =>{
 
     } catch (error) {
         console.error(error)
-        toast.error(error.message)
+        toast.error(error.response?.data?.message || error.message)
     }
  }
 

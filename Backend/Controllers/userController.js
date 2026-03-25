@@ -193,7 +193,7 @@ const bookAppointment = async (req, res) => {
     }
 
 
-    const userdata = await userModel.findById(.select('-password');
+    const userdata = await userModel.findById(userId).select('-password');
 
     if (!userdata) {
       return res.status(404).json({ success: false, message: "User not found" });
