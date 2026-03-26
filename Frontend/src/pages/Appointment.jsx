@@ -15,6 +15,7 @@ const Appointment = () => {
   const [docSlots,setDocSlots] = useState([])
   const [slotIndex,setSlotIndex] = useState(0)
   const [slotTime,setSlotTime] = useState('')
+  const [isBooking, setIsBooking] = useState(false)
 
     const navigate = useNavigate();
 
@@ -26,6 +27,10 @@ const Appointment = () => {
   
   const getAvailableSlots = async() =>{
     setDocSlots([])
+    
+    if (!docInfo) {
+      return
+    }
     // get current date and time
     let today = new Date();
 
@@ -53,12 +58,23 @@ const Appointment = () => {
       while(currentDate < endTime){
         let fommatedTime = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 
-        // add slot to array
-        timeSlots.push({
-          datetime: new Date(currentDate),
-          time: fommatedTime,
-       
-        })
+        let day = currentDate.getDate()
+        let month = currentDate.getMonth() + 1
+        let year = currentDate.getFullYear()
+
+        const slotDate = day + '-' + month + '-' + year
+        const slotTime = fommatedTime
+        const isSlotAvailable = docInfo.slots_booked?.[slotDate] && docInfo.slots_booked[slotDate].includes(slotTime)  ?  false : true
+
+        if (isSlotAvailable) {
+          // add slot to array
+          timeSlots.push({
+            datetime: new Date(currentDate),
+            time: fommatedTime,
+          })
+        }
+
+
         // increase 30 mins for next slot
         currentDate.setMinutes(currentDate.getMinutes() + 30)
       }
@@ -86,12 +102,17 @@ useEffect(() =>{
 
 
      const bookAppointment = async () =>{
+     if (isBooking) return;
+     setIsBooking(true);
+     
      if(!token){
+         setIsBooking(false);
          toast.warn("Login to Book Appointment")
         return  navigate('/login')
      }
 
      if(!slotTime){
+         setIsBooking(false);
          toast.warn("Please select a time slot")
          return
      }
@@ -117,6 +138,8 @@ useEffect(() =>{
     } catch (error) {
         console.error(error)
         toast.error(error.response?.data?.message || error.message)
+    } finally {
+        setIsBooking(false)
     }
  }
 
@@ -184,7 +207,7 @@ useEffect(() =>{
             </p>
           )) }
         </div>
-        <button onClick={bookAppointment} className=' bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 cursor-pointer'>Book an Appointment</button>
+        <button disabled={isBooking} onClick={bookAppointment} className={`bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 cursor-pointer transition-all ${isBooking ? 'opacity-50 cursor-not-allowed' : ''}`}>Book an Appointment</button>
       </div>
 
 

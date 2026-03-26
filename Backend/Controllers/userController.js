@@ -169,37 +169,32 @@ const bookAppointment = async (req, res) => {
       return res.json({ success: false, message: "All fields are required" });
     }
 
-
-    const doctorData = await doctorModel.findById(docId).select('-password') ;
-
-    if (!doctorData.available) {
-      return res.status(404).json({ success: false, message: "Doctor not found" });
-    }
-
-    let slot_booked = doctorData.slots_booked;
-
-    //  CHECKIMG FOR LOT AVALABILITY
-    if (slot_booked[slotdate] ) {
-      if (slot_booked[slotdate].includes(slotTime)) {
-        return res.status(400).json({ success: false, message: "Slot already booked" });
-      }else {
-        slot_booked[slotdate].push(slotTime);
-      }
-    } else {
-      // slot_booked[slotdate] = [slotTime];
-      slot_booked[slotdate] = [];
-
-      slot_booked[slotdate].push(slotTime);
-    }
-
-
     const userdata = await userModel.findById(userId).select('-password');
 
     if (!userdata) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    delete doctorData.slots_booked;  
+    // Atomically check for availability and book the slot to prevent race conditions
+    const doctorData = await doctorModel.findOneAndUpdate(
+      { 
+        _id: docId, 
+        available: true,
+        [`slots_booked.${slotdate}`]: { $ne: slotTime } 
+      },
+      { 
+        $push: { [`slots_booked.${slotdate}`]: slotTime } 
+      },
+      { new: true }
+    ).select('-password');
+
+    if (!doctorData) {
+      return res.status(400).json({ success: false, message: "Slot already booked or doctor not available" });
+    }
+
+    // Convert to plain object and remove slots_booked to save in appointment history
+    const doctorObj = doctorData.toObject ? doctorData.toObject() : JSON.parse(JSON.stringify(doctorData));
+    delete doctorObj.slots_booked;
     
     const appointmentData = {
       userId,
@@ -207,20 +202,13 @@ const bookAppointment = async (req, res) => {
       slotdate,
       slotTime,
       userdata,
-      doctorData,
+      doctorData: doctorObj,
       amount: doctorData.fee,
       date: new Date()
     }
 
     const newAppointment = new appointmentModel(appointmentData);
     await newAppointment.save();
-
-    // save new slot data in doc data
-    await doctorModel.findByIdAndUpdate(
-      docId,
-      { slots_booked: slot_booked },
-      { new: true }
-    );
 
     res.json({ success: true, message: "Appointment booked successfully", appointment: newAppointment });
   } catch (error) {
@@ -229,4 +217,63 @@ const bookAppointment = async (req, res) => {
   }
 }
 
-export { registeruser, loginuser, getUserDetails, updateUser,bookAppointment };
+
+
+// API TO GET ALL APPOINTMENTS
+
+const listAppointments = async (req, res) => {
+  try {
+
+    const userId = req.user
+    const appointments = await appointmentModel.find({userId})
+
+    res.json({ success: true, appointments });
+
+    
+    
+  } catch (error) {
+     console.log(error)
+      res.status(500).json({ success: false, message: error.message });
+  }
+
+}
+
+// API TO CANCEL APPOINTMENT 
+const cancelAppointment = async (req, res) => {
+
+  try {
+    const {appointmentId} = req.body;
+    const userId = req.user;
+    const appointmentData = await appointmentModel.findById(appointmentId);
+
+    // verify appointment user
+    if(appointmentData.userId !== userId){
+      return res.json({ success: false, message: "You are not authorized to cancel this appointment" });
+    
+    }
+
+    await appointmentModel.findByIdAndUpdate(appointmentId,{cancelled:true},{new:true})
+
+    //  releasing doc slot
+    const { docId ,slotdate,slotTime} = appointmentData;
+    const doctorData = await doctorModel.findById(docId);
+
+    let slot_booked = doctorData.slots_booked;
+
+   slot_booked[slotdate] = slot_booked[slotdate].filter((time) => time !== slotTime);
+
+   await doctorModel.findByIdAndUpdate(
+    docId,
+    { slots_booked: slot_booked },
+    { returnDocument: 'after' }
+  );
+
+    res.json({ success: true, message: "Appointment cancelled successfully" });
+ 
+  } catch (error) {
+    console.log(error)
+      res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+export { registeruser, loginuser, getUserDetails,listAppointments, updateUser,bookAppointment ,cancelAppointment};
