@@ -15,5 +15,6 @@ adminRouter.post('/all-doctors',authAdminMiddleware, allDoctors)
 adminRouter.post('/change-avalability',authAdminMiddleware, changeAvailability)
 adminRouter.get("/get-all-appointments", authAdminMiddleware, adminListAppointments)
 adminRouter.post("/cancel-appointment", authAdminMiddleware, cancelAppointment)
+adminRouter.get("/dashboard", authAdminMiddleware, dashboardData) 
 
 export {adminRouter}

@@ -5,6 +5,7 @@ import doctorModel from '../model/doctorModel.js';
 import appointmentModel from '../model/appointmentModel.js';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
+import userModel from '../model/userModel.js';
 
 
 
@@ -176,9 +177,25 @@ const cancelAppointment = async (req, res) => {
 
 const dashboardData = async (req, res) => {
     try {
-        
+        const doctors = await doctorModel.find({});
+        const appointments = await appointmentModel.find({});
+        const users = await userModel.find({});
+
+        const dashData = {
+            doctors: doctors.length,
+            appointments:  appointments.length,
+            users:users.length,
+            patients: users.length,
+            latestAppointments: appointments.slice(-5).reverse()
+        }
+
+        res.status(200).json({ success: true, dashData });
+
+
+
     } catch (error) {
-        
+        console.error('Error fetching dashboard data:', error);
+        res.status(500).json({ success: false, message: error.message || 'Server error' });
     }
 }
 
@@ -186,4 +203,4 @@ const dashboardData = async (req, res) => {
 
 
 
-export  {addDoctor,adminLogin,allDoctors,adminListAppointments,cancelAppointment}; 
+export  {addDoctor,adminLogin,allDoctors,adminListAppointments,cancelAppointment,dashboardData}; 

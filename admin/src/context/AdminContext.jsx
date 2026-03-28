@@ -8,7 +8,16 @@ const AdmincontextProvider = (props) => {
 
     const [adminToken, setAdminToken] = useState(localStorage.getItem('adminToken') || null);
     const [doctors, setDoctors] = useState([]);
-    const [appointments, setAppointments] = useState([])
+    const [appointments, setAppointments] = useState([]);
+    const [dashData, setDashData] = useState(null);
+
+
+
+
+
+
+
+
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
@@ -87,6 +96,28 @@ const AdmincontextProvider = (props) => {
         }
     }
 
+    const getDashData = async () => {
+        try {
+            const { data } = await axios.get(
+                backendUrl + `/api/admin/dashboard`,
+                {},
+                {
+                    headers: { adminToken }
+                }
+            );
+
+            if (data.success) {
+                setDashData(data.dashData);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
+
+        
+
      
 
     const value = {
@@ -98,7 +129,9 @@ const AdmincontextProvider = (props) => {
         changeAvailability,
         getAllAppointments,
         appointments,
-        setAppointments
+        setAppointments,
+        getDashData,
+        dashData
        
     };
 
