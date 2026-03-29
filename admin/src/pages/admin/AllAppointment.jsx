@@ -1,16 +1,21 @@
 import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
+import LoadingScreen from '../../components/LoadingScreen'
 
 const AllAppointment = () => {
   const { calculateAge, slotDateFormat, currencySymbol } = useContext(AppContext)
-  const { getAllAppointments, appointments, adminToken, cancelAppointment } = useContext(AdminContext)
+  const { getAllAppointments, appointments, adminToken, cancelAppointment, appointmentsLoading } = useContext(AdminContext)
 
   useEffect(() => {
     if (adminToken) {
       getAllAppointments()
     }
   }, [adminToken])
+
+  if (appointmentsLoading && appointments.length === 0) {
+    return <LoadingScreen title='Loading appointments' message='Fetching appointment records, payment states, and doctor assignments.' />
+  }
 
   return (
     <div className='w-full p-4 sm:p-6 lg:p-8'>

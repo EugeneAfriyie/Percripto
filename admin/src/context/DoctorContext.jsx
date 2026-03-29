@@ -10,9 +10,14 @@ const DoctorcontextProvider = (props) => {
   const [doctorProfile, setDoctorProfile] = useState(null);
   const [doctorAppointments, setDoctorAppointments] = useState([]);
   const [doctorDashData, setDoctorDashData] = useState(null);
+  const [doctorProfileLoading, setDoctorProfileLoading] = useState(false);
+  const [doctorAppointmentsLoading, setDoctorAppointmentsLoading] = useState(false);
+  const [doctorDashLoading, setDoctorDashLoading] = useState(false);
+  const [doctorProfileSaving, setDoctorProfileSaving] = useState(false);
 
   const getDoctorProfile = async () => {
     try {
+      setDoctorProfileLoading(true);
       const { data } = await axios.get(`${backendUrl}/api/doctor/profile`, {
         headers: { doctortoken: doctorToken },
       });
@@ -24,11 +29,14 @@ const DoctorcontextProvider = (props) => {
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setDoctorProfileLoading(false);
     }
   };
 
   const getDoctorAppointments = async () => {
     try {
+      setDoctorAppointmentsLoading(true);
       const { data } = await axios.get(`${backendUrl}/api/doctor/appointments`, {
         headers: { doctortoken: doctorToken },
       });
@@ -40,11 +48,14 @@ const DoctorcontextProvider = (props) => {
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setDoctorAppointmentsLoading(false);
     }
   };
 
   const getDoctorDashboard = async () => {
     try {
+      setDoctorDashLoading(true);
       const { data } = await axios.get(`${backendUrl}/api/doctor/dashboard`, {
         headers: { doctortoken: doctorToken },
       });
@@ -56,6 +67,8 @@ const DoctorcontextProvider = (props) => {
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setDoctorDashLoading(false);
     }
   };
 
@@ -73,6 +86,7 @@ const DoctorcontextProvider = (props) => {
 
   const updateDoctorProfile = async (profileData) => {
     try {
+      setDoctorProfileSaving(true);
       const payload = new FormData();
       payload.append("name", profileData.name);
       payload.append("speciality", profileData.speciality);
@@ -99,6 +113,8 @@ const DoctorcontextProvider = (props) => {
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setDoctorProfileSaving(false);
     }
   };
 
@@ -154,6 +170,10 @@ const DoctorcontextProvider = (props) => {
     updateDoctorProfile,
     completeAppointment,
     cancelAppointment,
+    doctorProfileLoading,
+    doctorAppointmentsLoading,
+    doctorDashLoading,
+    doctorProfileSaving,
   };
 
   return <DoctorContext.Provider value={value}>{props.children}</DoctorContext.Provider>;

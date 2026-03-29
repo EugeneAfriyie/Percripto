@@ -3,11 +3,15 @@ import { AppContext } from '../context/AppContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useLocation, useNavigate } from 'react-router-dom'
+import LoadingScreen from '../components/LoadingScreen'
+import LoadingButton from '../components/LoadingButton'
 
 const My_Appointment = () => {
   const { backendUrl, token } = useContext(AppContext)
   const [appointment, setAppointment] = useState([])
   const [verifyingPayment, setVerifyingPayment] = useState(false)
+  const [appointmentsLoading, setAppointmentsLoading] = useState(false)
+  const [actionLoading, setActionLoading] = useState('')
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
   const slotDateFormat = (slotdate) => {
@@ -24,6 +28,7 @@ const My_Appointment = () => {
 
   const appointmentPaystack = async (appointmentId) => {
     try {
+      setActionLoading(`pay-${appointmentId}`)
       const { data } = await axios.post(backendUrl + '/api/user/appointment-paystack', { appointmentId }, { headers: { token } })
 
       if (data.success) {
@@ -34,6 +39,8 @@ const My_Appointment = () => {
     } catch (error) {
       console.error(error)
       toast.error(error.response?.data?.message || error.message)
+    } finally {
+      setActionLoading('')
     }
   }
 
@@ -67,6 +74,7 @@ const My_Appointment = () => {
 
   const getAppointment = async () => {
     try {
+      setAppointmentsLoading(true)
       const { data } = await axios.get(backendUrl + '/api/user/appointment', { headers: { token } })
       if (data.success) {
         setAppointment(data.appointments.reverse())
@@ -76,11 +84,14 @@ const My_Appointment = () => {
     } catch (error) {
       console.log(error)
       toast.error(error.message)
+    } finally {
+      setAppointmentsLoading(false)
     }
   }
 
   const cancelAppointment = async (appointmentId) => {
     try {
+      setActionLoading(`cancel-${appointmentId}`)
       const { data } = await axios.post(backendUrl + '/api/user/cancel-appointment', { appointmentId }, { headers: { token } })
       if (data.success) {
         toast.success(data.message)
@@ -91,6 +102,8 @@ const My_Appointment = () => {
     } catch (error) {
       console.log(error)
       toast.error(error.message)
+    } finally {
+      setActionLoading('')
     }
   }
 
@@ -108,6 +121,15 @@ const My_Appointment = () => {
       verifyPaystackPayment(reference)
     }
   }, [location.search, token])
+
+  if ((appointmentsLoading && appointment.length === 0) || verifyingPayment) {
+    return (
+      <LoadingScreen
+        title={verifyingPayment ? 'Verifying payment' : 'Loading appointments'}
+        message={verifyingPayment ? 'We are confirming your payment and updating the appointment status.' : 'Gathering your upcoming sessions and booking history.'}
+      />
+    )
+  }
 
   return (
     <div className='py-8'>
@@ -157,21 +179,25 @@ const My_Appointment = () => {
 
             <div className='mt-5 flex flex-col gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:justify-end'>
               {!item.cancelled && !item.payment && (
-                <button
+                <LoadingButton
                   onClick={() => appointmentPaystack(item._id)}
+                  loading={actionLoading === `pay-${item._id}`}
+                  loadingText='Redirecting...'
                   className='rounded-full border border-slate-200 px-5 py-3 text-sm font-medium text-slate-600 transition hover:bg-primary hover:text-white'
                 >
                   Pay Online
-                </button>
+                </LoadingButton>
               )}
 
               {!item.cancelled && (
-                <button
+                <LoadingButton
                   onClick={() => cancelAppointment(item._id)}
+                  loading={actionLoading === `cancel-${item._id}`}
+                  loadingText='Cancelling...'
                   className='rounded-full border border-rose-200 px-5 py-3 text-sm font-medium text-rose-600 transition hover:bg-rose-50'
                 >
                   Cancel Appointment
-                </button>
+                </LoadingButton>
               )}
 
               {item.payment && (

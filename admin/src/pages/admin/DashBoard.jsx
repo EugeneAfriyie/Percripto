@@ -2,9 +2,10 @@ import React, { useContext, useEffect } from "react";
 import { AdminContext } from "../../context/AdminContext";
 import { assets } from "../../assets/assets_admin/assets";
 import { AppContext } from "../../context/AppContext";
+import LoadingScreen from "../../components/LoadingScreen";
 
 const DashBoard = () => {
-  const { getDashData, dashData, adminToken, cancelAppointment } = useContext(AdminContext);
+  const { getDashData, dashData, adminToken, cancelAppointment, dashLoading } = useContext(AdminContext);
   const { slotDateFormat } = useContext(AppContext);
 
   useEffect(() => {
@@ -13,8 +14,8 @@ const DashBoard = () => {
     }
   }, [adminToken]);
 
-  if (!dashData) {
-    return <div className="w-full p-6 text-gray-500">Loading admin dashboard...</div>;
+  if (dashLoading || !dashData) {
+    return <LoadingScreen title="Loading admin dashboard" message="Gathering doctors, patients, and latest booking activity." />;
   }
 
   const statCards = [

@@ -3,6 +3,7 @@ import { assets } from "../../assets/assets_admin/assets";
 import { AdminContext } from "../../context/AdminContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import LoadingButton from "../../components/LoadingButton";
 
 const AddDoc = () => {
   const [docImg, setDocImg] = useState(false);
@@ -16,6 +17,7 @@ const AddDoc = () => {
   const [degree, setdegree] = useState("");
   const [address_1, setaddress_1] = useState("");
   const [address_2, setaddress_2] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const { adminToken, backendUrl } = useContext(AdminContext);
 
@@ -23,6 +25,7 @@ const AddDoc = () => {
     e.preventDefault();
 
     try {
+      setSubmitting(true);
       if (!docImg) {
         return toast.error("Image Not Selected");
       }
@@ -60,6 +63,8 @@ const AddDoc = () => {
     } catch (error) {
       console.error(error);
       toast.error(error.response?.data?.message || "An error occurred");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -157,7 +162,9 @@ const AddDoc = () => {
           </label>
         </div>
 
-        <button className="mt-8 rounded-full bg-primary px-10 py-3 text-white">Add Doctor</button>
+        <LoadingButton loading={submitting} loadingText='Creating profile...' className="mt-8 rounded-full bg-primary px-10 py-3 text-white">
+          Add Doctor
+        </LoadingButton>
       </div>
     </form>
   );

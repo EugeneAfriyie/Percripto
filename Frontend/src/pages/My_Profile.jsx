@@ -2,11 +2,14 @@ import React, { useContext, useState } from 'react'
 import { AppContext } from '../context/AppContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import LoadingScreen from '../components/LoadingScreen'
+import LoadingButton from '../components/LoadingButton'
 
 const My_Profile = () => {
-  const { userdata: userData, setUserdata, token, backendUrl, loadUserData } = useContext(AppContext)
+  const { userdata: userData, setUserdata, token, backendUrl, loadUserData, userLoading } = useContext(AppContext)
   const [isEdit, setIsEdit] = useState(true)
   const [image, setImage] = useState(null)
+  const [savingProfile, setSavingProfile] = useState(false)
 
   const updateProfile = async () => {
     const formData = new FormData()
@@ -19,6 +22,7 @@ const My_Profile = () => {
     image && formData.append('image', image)
 
     try {
+      setSavingProfile(true)
       const { data } = await axios.post(backendUrl + '/api/user/update_profile', formData, {
         headers: { token },
       })
@@ -35,11 +39,13 @@ const My_Profile = () => {
     } catch (error) {
       console.log(error)
       toast.error(error.message)
+    } finally {
+      setSavingProfile(false)
     }
   }
 
-  if (!userData) {
-    return <div className='py-8 text-slate-500'>Loading profile...</div>
+  if (userLoading || !userData) {
+    return <LoadingScreen title='Loading profile' message='Preparing your personal details and medical preferences.' />
   }
 
   const profileImage = image ? URL.createObjectURL(image) : userData.image
@@ -91,9 +97,9 @@ const My_Profile = () => {
             </div>
 
             {isEdit ? (
-              <button onClick={updateProfile} className='rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white transition hover:bg-slate-800'>
+              <LoadingButton onClick={updateProfile} loading={savingProfile} loadingText='Saving profile...' className='rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white transition hover:bg-slate-800'>
                 Save Information
-              </button>
+              </LoadingButton>
             ) : (
               <button onClick={() => setIsEdit(true)} className='rounded-full border border-primary px-6 py-3 text-sm font-medium text-primary transition hover:bg-primary hover:text-white'>
                 Edit Profile

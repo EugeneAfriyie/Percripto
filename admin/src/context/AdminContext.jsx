@@ -11,6 +11,11 @@ const AdmincontextProvider = (props) => {
     const [appointments, setAppointments] = useState([]);
     const [dashData, setDashData] = useState(null);
     const [adminProfile, setAdminProfile] = useState(null);
+    const [doctorsLoading, setDoctorsLoading] = useState(false);
+    const [appointmentsLoading, setAppointmentsLoading] = useState(false);
+    const [dashLoading, setDashLoading] = useState(false);
+    const [adminProfileLoading, setAdminProfileLoading] = useState(false);
+    const [adminProfileSaving, setAdminProfileSaving] = useState(false);
 
 
 
@@ -34,6 +39,7 @@ const AdmincontextProvider = (props) => {
 
     const getAllDoctors = async () => {
         try {
+            setDoctorsLoading(true)
             const { data } = await axios.post(
                 backendUrl + `/api/admin/all-doctors`,
                 {},
@@ -51,6 +57,8 @@ const AdmincontextProvider = (props) => {
 
         } catch (error) {
             toast.error(error.message);
+        } finally {
+            setDoctorsLoading(false)
         }
     };
 
@@ -79,6 +87,7 @@ const AdmincontextProvider = (props) => {
 
     const getAllAppointments = async () =>{
         try {
+            setAppointmentsLoading(true)
             const {data} = await axios.get(
                 backendUrl + `/api/admin/get-all-appointments`,
                 {
@@ -94,11 +103,14 @@ const AdmincontextProvider = (props) => {
             }
         } catch (error) {
             toast.error(error.message)
+        } finally {
+            setAppointmentsLoading(false)
         }
     }
 
     const getDashData = async () => {
         try {
+            setDashLoading(true)
             const { data } = await axios.get(
                 backendUrl + `/api/admin/dashboard`,
                 {
@@ -114,11 +126,14 @@ const AdmincontextProvider = (props) => {
             }
         } catch (error) {
             toast.error(error.message);
+        } finally {
+            setDashLoading(false)
         }
     };
 
     const getAdminProfile = async () => {
         try {
+            setAdminProfileLoading(true)
             const { data } = await axios.get(
                 backendUrl + `/api/admin/profile`,
                 {
@@ -133,11 +148,14 @@ const AdmincontextProvider = (props) => {
             }
         } catch (error) {
             toast.error(error.response?.data?.message || error.message)
+        } finally {
+            setAdminProfileLoading(false)
         }
     }
 
     const updateAdminProfile = async (formData) => {
         try {
+            setAdminProfileSaving(true)
             const { data } = await axios.post(
                 backendUrl + `/api/admin/update-profile`,
                 formData,
@@ -154,6 +172,8 @@ const AdmincontextProvider = (props) => {
             }
         } catch (error) {
             toast.error(error.response?.data?.message || error.message)
+        } finally {
+            setAdminProfileSaving(false)
         }
     }
 
@@ -193,7 +213,12 @@ const AdmincontextProvider = (props) => {
         cancelAppointment,
         adminProfile,
         getAdminProfile,
-        updateAdminProfile
+        updateAdminProfile,
+        doctorsLoading,
+        appointmentsLoading,
+        dashLoading,
+        adminProfileLoading,
+        adminProfileSaving
        
     };
 

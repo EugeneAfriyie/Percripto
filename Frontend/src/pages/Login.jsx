@@ -3,6 +3,7 @@ import { AppContext } from '../context/AppContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import LoadingButton from '../components/LoadingButton'
 
 const Login = () => {
   const [state, setState] = useState('Sign up')
@@ -171,13 +172,15 @@ const Login = () => {
                 />
               </label>
 
-              <button
+              <LoadingButton
                 type='submit'
                 disabled={isLoading}
                 className='mt-2 rounded-2xl bg-slate-900 px-5 py-3.5 text-base font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70'
+                loading={isLoading}
+                loadingText='Please wait...'
               >
-                {isLoading ? 'Please wait...' : state === 'Sign up' ? 'Create Account' : 'Login'}
-              </button>
+                {state === 'Sign up' ? 'Create Account' : 'Login'}
+              </LoadingButton>
             </div>
 
             <div className='mt-8 rounded-3xl bg-sky-50 p-5 text-sm text-slate-600'>

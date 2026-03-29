@@ -15,12 +15,15 @@ const AppContextProvider = (props) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL ;
     const [token, setToken] = useState(localStorage.getItem("token") ? localStorage.getItem("token") : false);
     const [userdata,setUserdata] = useState(false)
+    const [doctorsLoading, setDoctorsLoading] = useState(false)
+    const [userLoading, setUserLoading] = useState(false)
 
 
 
 
     const getDocList = async () => {
         try {
+            setDoctorsLoading(true)
             // console.log('Fetching doctors from:', backendUrl + `/api/doctor/list`);
             const { data } = await axios.get( backendUrl + `/api/doctor/list` );
             // toast.success(data.message);
@@ -36,11 +39,14 @@ const AppContextProvider = (props) => {
         } catch (error) {
             console.log(error)
             toast.error(error.message);
+        } finally {
+            setDoctorsLoading(false)
         }
     };
 
     const loadUserData = async () => {
     try {
+        setUserLoading(true)
         const { data } = await axios.get(
         `${backendUrl}/api/user/get-profile-details`,
         { headers: { token } }
@@ -61,6 +67,8 @@ const AppContextProvider = (props) => {
             setToken(false);
             setUserdata(false);
         }
+    } finally {
+        setUserLoading(false)
     }
     };
 
@@ -85,7 +93,7 @@ const AppContextProvider = (props) => {
 
 
     const value = {
-        doctors,currencySymbol,token,setToken,backendUrl,setUserdata,userdata,loadUserData,getDocList
+        doctors,currencySymbol,token,setToken,backendUrl,setUserdata,userdata,loadUserData,getDocList,doctorsLoading,userLoading
     }
 
     return (

@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { assets } from '../../assets/assets_admin/assets'
+import LoadingScreen from '../../components/LoadingScreen'
+import LoadingButton from '../../components/LoadingButton'
 
 const AdminProfile = () => {
-  const { adminProfile, getAdminProfile, updateAdminProfile, adminToken } = useContext(AdminContext)
+  const { adminProfile, getAdminProfile, updateAdminProfile, adminToken, adminProfileLoading, adminProfileSaving } = useContext(AdminContext)
   const [name, setName] = useState('')
   const [image, setImage] = useState(false)
 
@@ -33,8 +35,8 @@ const AdminProfile = () => {
     setImage(false)
   }
 
-  if (!adminProfile) {
-    return <div className='w-full p-6 text-gray-500'>Loading admin profile...</div>
+  if (adminProfileLoading || !adminProfile) {
+    return <LoadingScreen title='Loading admin profile' message='Preparing account details and profile controls.' />
   }
 
   const previewImage = image ? URL.createObjectURL(image) : adminProfile.image || assets.upload_area
@@ -65,9 +67,9 @@ const AdminProfile = () => {
               <h2 className='text-2xl font-semibold text-slate-900'>Update Profile</h2>
               <p className='text-sm text-slate-500'>Add or replace the admin profile photo and display name.</p>
             </div>
-            <button type='submit' className='rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-white'>
+            <LoadingButton type='submit' loading={adminProfileSaving} loadingText='Saving changes...' className='rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-white'>
               Save Changes
-            </button>
+            </LoadingButton>
           </div>
 
           <div className='mt-8 grid gap-6'>

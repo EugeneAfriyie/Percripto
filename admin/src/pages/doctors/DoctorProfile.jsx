@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { DoctorContext } from '../../context/DoctorContext'
 import { assets } from '../../assets/assets_admin/assets'
+import LoadingScreen from '../../components/LoadingScreen'
+import LoadingButton from '../../components/LoadingButton'
 
 const DoctorProfile = () => {
-  const { doctorProfile, updateDoctorProfile, getDoctorProfile, doctorToken } = useContext(DoctorContext)
+  const { doctorProfile, updateDoctorProfile, getDoctorProfile, doctorToken, doctorProfileLoading, doctorProfileSaving } = useContext(DoctorContext)
   const [formData, setFormData] = useState(null)
   const [image, setImage] = useState(false)
 
@@ -59,8 +61,8 @@ const DoctorProfile = () => {
     })
   }
 
-  if (!doctorProfile || !formData) {
-    return <div className='w-full p-6 text-gray-500'>Loading doctor profile...</div>
+  if (doctorProfileLoading || !doctorProfile || !formData) {
+    return <LoadingScreen title='Loading doctor profile' message='Preparing your photo, details, and booking settings.' />
   }
 
   const profileAddress = [doctorProfile.address?.line1, doctorProfile.address?.line2]
@@ -118,9 +120,9 @@ const DoctorProfile = () => {
               <h2 className='text-2xl font-semibold text-slate-900'>Edit Details</h2>
               <p className='text-sm text-slate-500'>Update your profile photo and professional details.</p>
             </div>
-            <button type='submit' className='rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-white'>
+            <LoadingButton type='submit' loading={doctorProfileSaving} loadingText='Saving profile...' className='rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-white'>
               Save Changes
-            </button>
+            </LoadingButton>
           </div>
 
           <div className='mt-8 grid gap-5 md:grid-cols-2'>

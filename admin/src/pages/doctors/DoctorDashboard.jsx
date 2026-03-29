@@ -1,9 +1,10 @@
 import React, { useContext, useEffect } from 'react'
 import { DoctorContext } from '../../context/DoctorContext'
 import { AppContext } from '../../context/AppContext'
+import LoadingScreen from '../../components/LoadingScreen'
 
 const DoctorDashboard = () => {
-  const { doctorProfile, doctorDashData, getDoctorDashboard, getDoctorProfile, doctorToken } =
+  const { doctorProfile, doctorDashData, getDoctorDashboard, getDoctorProfile, doctorToken, doctorProfileLoading, doctorDashLoading } =
     useContext(DoctorContext)
   const { slotDateFormat, currencySymbol } = useContext(AppContext)
 
@@ -14,8 +15,8 @@ const DoctorDashboard = () => {
     }
   }, [doctorToken])
 
-  if (!doctorProfile || !doctorDashData) {
-    return <div className='w-full p-6 text-gray-500'>Loading doctor dashboard...</div>
+  if (doctorProfileLoading || doctorDashLoading || !doctorProfile || !doctorDashData) {
+    return <LoadingScreen title='Loading doctor dashboard' message='Preparing today&apos;s schedule, earnings, and care activity.' />
   }
 
   const statCards = [

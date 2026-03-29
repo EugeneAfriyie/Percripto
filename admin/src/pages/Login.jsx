@@ -5,6 +5,7 @@ import axios from 'axios'
 import { DoctorContext } from '../context/DoctorContext'
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import LoadingButton from '../components/LoadingButton'
 
 const adminPrefix = import.meta.env.VITE_ADMIN_PREFIX || ''
 const doctorPrefix = import.meta.env.VITE_DOCTOR_PREFIX || '/doctor'
@@ -152,12 +153,14 @@ const Login = () => {
                 />
               </label>
 
-              <button
+              <LoadingButton
                 disabled={isLoading}
                 className='mt-2 rounded-2xl bg-slate-900 px-5 py-3.5 text-base font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70'
+                loading={isLoading}
+                loadingText='Signing in...'
               >
-                {isLoading ? 'Signing in...' : `Login as ${state}`}
-              </button>
+                {`Login as ${state}`}
+              </LoadingButton>
             </div>
 
             <div className='mt-8 rounded-3xl bg-sky-50 p-5 text-sm text-slate-600'>

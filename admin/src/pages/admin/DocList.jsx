@@ -1,14 +1,19 @@
 import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
+import LoadingScreen from '../../components/LoadingScreen'
 
 const DocList = () => {
-  const { adminToken, doctors, getAllDoctors, changeAvailability } = useContext(AdminContext)
+  const { adminToken, doctors, getAllDoctors, changeAvailability, doctorsLoading } = useContext(AdminContext)
 
   useEffect(() => {
     if (adminToken) {
       getAllDoctors()
     }
   }, [adminToken, getAllDoctors])
+
+  if (doctorsLoading && doctors.length === 0) {
+    return <LoadingScreen title='Loading doctors' message='Preparing the doctor directory and availability controls.' />
+  }
 
   return (
     <div className='w-full p-4 sm:p-6 lg:p-8'>
