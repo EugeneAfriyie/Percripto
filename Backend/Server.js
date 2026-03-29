@@ -8,6 +8,7 @@ import { doctorRouter } from "./routes/doctorRoute.js";
 import { userRouter } from "./routes/userRoutes.js";
 
 
+
 // app config
 const app = express();
 app.use(express.json());
