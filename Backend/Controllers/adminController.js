@@ -1,11 +1,12 @@
 import validator from 'validator';
+import jwt from 'jsonwebtoken';
 import bycrypt from 'bcrypt';
 import {v2 as cloudinary} from 'cloudinary';
 import doctorModel from '../model/doctorModel.js';
 import appointmentModel from '../model/appointmentModel.js';
-import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import userModel from '../model/userModel.js';
+import adminModel from '../model/adminModel.js';
 
 
 
@@ -106,6 +107,14 @@ const adminLogin = async (req, res) => {
         }
 
         if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+            const existingAdmin = await adminModel.findOne({ email });
+
+            if (!existingAdmin) {
+                await adminModel.create({
+                    email,
+                    name: 'Admin',
+                });
+            }
             
             // The payload should identify the user as an admin.
             // Note: This token will not work on user-only routes that expect a user `id`.
@@ -125,6 +134,72 @@ const adminLogin = async (req, res) => {
     } catch (error) {
         console.error('Error logging in admin:', error);
         res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+const getAdminProfile = async (req, res) => {
+    try {
+        const email = req.adminEmail;
+
+        let admin = await adminModel.findOne({ email });
+
+        if (!admin) {
+            admin = await adminModel.create({
+                email,
+                name: 'Admin',
+            });
+        }
+
+        return res.status(200).json({ success: true, admin });
+    } catch (error) {
+        console.error('Error getting admin profile:', error);
+        return res.status(500).json({ success: false, message: error.message || 'Server error' });
+    }
+}
+
+const updateAdminProfile = async (req, res) => {
+    try {
+        const email = req.adminEmail;
+        const { name } = req.body;
+        const imagefile = req.file;
+
+        let admin = await adminModel.findOne({ email });
+
+        if (!admin) {
+            admin = await adminModel.create({
+                email,
+                name: name || 'Admin',
+            });
+        }
+
+        const updateData = {};
+
+        if (name) {
+            updateData.name = name;
+        }
+
+        if (imagefile) {
+            const uploadimg = await cloudinary.uploader.upload(imagefile.path, {
+                resource_type: 'image'
+            });
+
+            updateData.image = uploadimg.secure_url;
+        }
+
+        const updatedAdmin = await adminModel.findOneAndUpdate(
+            { email },
+            updateData,
+            { new: true }
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: 'Admin profile updated successfully',
+            admin: updatedAdmin
+        });
+    } catch (error) {
+        console.error('Error updating admin profile:', error);
+        return res.status(500).json({ success: false, message: error.message || 'Server error' });
     }
 }
 
@@ -175,7 +250,7 @@ const cancelAppointment = async (req, res) => {
 
 // API TO GET DASHBOARD DATA FOR ADMIN 
 
-const dashboardData = async (req, res) => {
+const getDashboardData = async (req, res) => {
     try {
         const doctors = await doctorModel.find({});
         const appointments = await appointmentModel.find({});
@@ -203,4 +278,4 @@ const dashboardData = async (req, res) => {
 
 
 
-export  {addDoctor,adminLogin,allDoctors,adminListAppointments,cancelAppointment,dashboardData}; 
+export  {addDoctor,adminLogin,allDoctors,adminListAppointments,cancelAppointment,getDashboardData,getAdminProfile,updateAdminProfile}; 

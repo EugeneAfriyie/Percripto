@@ -1,44 +1,39 @@
-import React, { useContext } from 'react'
-import  { AppContext } from '../context/AppContext'
-import { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { AppContext } from '../context/AppContext'
 import axios from 'axios'
-import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 const My_Appointment = () => {
-
-  const {backendUrl,token} = useContext(AppContext)
-  const [appointment,setAppointment] = useState([])
+  const { backendUrl, token } = useContext(AppContext)
+  const [appointment, setAppointment] = useState([])
   const [verifyingPayment, setVerifyingPayment] = useState(false)
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-  
-  const slotDateFormat = (slotdate) =>{
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+  const slotDateFormat = (slotdate) => {
     const dataArray = slotdate.split('-')
     const day = dataArray[0]
     const month = dataArray[1]
     const year = dataArray[2]
-    
-    return day + ' ' + months[Number(month - 1) ] + ' ' + year
+
+    return day + ' ' + months[Number(month - 1)] + ' ' + year
   }
+
   const location = useLocation()
   const navigate = useNavigate()
 
-
-  const appointmentPaystack = async(appointmentId) =>{ // Renamed function
+  const appointmentPaystack = async (appointmentId) => {
     try {
-      const {data} = await axios.post(backendUrl + '/api/user/appointment-paystack',{appointmentId},{headers: {token}}) // Changed endpoint
+      const { data } = await axios.post(backendUrl + '/api/user/appointment-paystack', { appointmentId }, { headers: { token } })
 
-        if(data.success){
-          // Redirect to Paystack authorization URL
-          window.location.href = data.authorization_url;
-          console.log(data)
-        } else {
-          toast.error(data.message);
-        }
+      if (data.success) {
+        window.location.href = data.authorization_url
+      } else {
+        toast.error(data.message)
+      }
     } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || error.message);
+      console.error(error)
+      toast.error(error.response?.data?.message || error.message)
     }
   }
 
@@ -70,47 +65,40 @@ const My_Appointment = () => {
     }
   }
 
-  const getAppointment = async() =>{
+  const getAppointment = async () => {
     try {
-      const {data} = await axios.get(backendUrl + '/api/user/appointment',{headers: {token}})
-      if(data.success){
+      const { data } = await axios.get(backendUrl + '/api/user/appointment', { headers: { token } })
+      if (data.success) {
         setAppointment(data.appointments.reverse())
-        console.log(data.appointments)
-        
-       
-      }else{
+      } else {
         toast.error(data.message)
       }
-      
     } catch (error) {
       console.log(error)
       toast.error(error.message)
     }
   }
 
-  const cancelAppointment = async(appointmentId) =>{
-    console.log(appointmentId)
+  const cancelAppointment = async (appointmentId) => {
     try {
-      const {data} = await axios.post(backendUrl + '/api/user/cancel-appointment',{appointmentId},{headers: {token}})
-      if(data.success){
+      const { data } = await axios.post(backendUrl + '/api/user/cancel-appointment', { appointmentId }, { headers: { token } })
+      if (data.success) {
         toast.success(data.message)
         getAppointment()
-      }else{
+      } else {
         toast.error(data.message)
       }
-      
     } catch (error) {
       console.log(error)
       toast.error(error.message)
     }
   }
 
-  useEffect(() =>{
-    if(token){
+  useEffect(() => {
+    if (token) {
       getAppointment()
-       
     }
-  },[token])
+  }, [token])
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search)
@@ -122,45 +110,84 @@ const My_Appointment = () => {
   }, [location.search, token])
 
   return (
-    <div>
-      <p className='pb-3 mt-12 font-medium text-zinc-700 border-b'>My Appointments</p>
-      <div className="">
-      {
-        appointment.map((item,index) =>(
-          <div  className=" grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-2 border-b " key={index}>
-            <div className="">
-              <img className='w-32 bg-indigo-50' src={item.doctorData.image} alt="" />
+    <div className='py-8'>
+      <div className='flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between'>
+        <div>
+          <h1 className='text-2xl font-semibold text-slate-900'>My Appointments</h1>
+          <p className='text-sm text-slate-500'>Track your doctor visits, payment status, and upcoming sessions in one place.</p>
+        </div>
+        <div className='rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600 shadow-sm'>
+          {appointment.length} appointments
+        </div>
+      </div>
+
+      <div className='mt-6 grid gap-4'>
+        {appointment.length === 0 && (
+          <div className='rounded-3xl border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm'>
+            You have no appointments yet.
+          </div>
+        )}
+
+        {appointment.map((item, index) => (
+          <div key={index} className='rounded-[30px] border border-slate-200 bg-white p-5 shadow-sm'>
+            <div className='flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between'>
+              <div className='flex items-center gap-4'>
+                <img className='h-24 w-24 rounded-[24px] bg-indigo-50 object-cover' src={item.doctorData.image} alt='' />
+                <div className='text-sm text-zinc-600'>
+                  <p className='text-xl font-semibold text-slate-900'>{item.doctorData.name}</p>
+                  <p className='mt-1'>{item.doctorData.speciality}</p>
+                  <p className='mt-3 text-sm font-medium text-slate-700'>Address</p>
+                  <p className='text-xs'>{item.doctorData.address.line1}</p>
+                  <p className='text-xs'>{item.doctorData.address.line2}</p>
+                  <p className='mt-3 text-sm'>
+                    <span className='font-medium text-slate-800'>Date & Time:</span> {slotDateFormat(item.slotdate)} | {item.slotTime}
+                  </p>
+                </div>
+              </div>
+
+              <div className='flex flex-wrap gap-2 text-sm'>
+                <span className={`rounded-full px-3 py-1.5 ${item.payment ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
+                  {item.payment ? 'Paid' : 'Awaiting payment'}
+                </span>
+                <span className={`rounded-full px-3 py-1.5 ${item.cancelled ? 'bg-rose-50 text-rose-700' : 'bg-sky-50 text-sky-700'}`}>
+                  {item.cancelled ? 'Cancelled' : 'Active booking'}
+                </span>
+              </div>
             </div>
 
-          <div className="flex-1 text-sm text-zinc-600">
-            <p className='text-neutral-800 font-semibold'>{item.doctorData.name}</p>
-            <p>{item.doctorData.speciality}</p>
-            <p className='text-zinc-700 font-medium mt-1'>Address:</p>
-            <p className='text-xs'>{item.doctorData.address.line1}</p>
-            <p className='text-xs'>{item.doctorData.address.line2}</p>
-            <p className='text-sm mt-1'><span className='text-sm text-neutral-700 font-medium'>Date & Time </span> {slotDateFormat(item.slotdate)} | {item.slotTime}</p>
+            <div className='mt-5 flex flex-col gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:justify-end'>
+              {!item.cancelled && !item.payment && (
+                <button
+                  onClick={() => appointmentPaystack(item._id)}
+                  className='rounded-full border border-slate-200 px-5 py-3 text-sm font-medium text-slate-600 transition hover:bg-primary hover:text-white'
+                >
+                  Pay Online
+                </button>
+              )}
+
+              {!item.cancelled && (
+                <button
+                  onClick={() => cancelAppointment(item._id)}
+                  className='rounded-full border border-rose-200 px-5 py-3 text-sm font-medium text-rose-600 transition hover:bg-rose-50'
+                >
+                  Cancel Appointment
+                </button>
+              )}
+
+              {item.payment && (
+                <button className='rounded-full border border-emerald-500 px-5 py-3 text-sm font-medium text-emerald-600'>
+                  Payment Successful
+                </button>
+              )}
+
+              {item.cancelled && (
+                <button className='rounded-full border border-red-500 px-5 py-3 text-sm font-medium text-red-500'>
+                  Appointment Cancelled
+                </button>
+              )}
+            </div>
           </div>
-          <div className=""></div>
-          <div className="flex flex-col gap-2 justify-end">
-            
-
-            { !item.cancelled && !item.payment && <button onClick={() => appointmentPaystack(item._id)} className='text-sm text-stone-500 text-center sm:min-w-48 border hover:bg-primary hover:text-white transition-all duration-300 py-2'>Pay online</button>
-
-            }
-            { !item.cancelled && <button onClick={() => cancelAppointment(item._id)} className='text-sm text-stone-500 text-center sm:min-w-48 border hover:bg-red-600 hover:text-white transition-all duration-300 py-2'>Cancel Appointment</button>
-            }
-
-            { item.payment && <button className='sm:min-w-48 py-2 border border-green-500 rounded text-green-600'>Payment Successful</button>
-}
-            { item.cancelled && <button className='sm:min-w-48 py-2 border border-red-500 rounded text-red-500'>Appointment Cancelled</button>
-}
-
-          </div>
-
-
-          </div>
-        ))
-      }
+        ))}
       </div>
     </div>
   )

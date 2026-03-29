@@ -10,6 +10,7 @@ const AdmincontextProvider = (props) => {
     const [doctors, setDoctors] = useState([]);
     const [appointments, setAppointments] = useState([]);
     const [dashData, setDashData] = useState(null);
+    const [adminProfile, setAdminProfile] = useState(null);
 
 
 
@@ -87,7 +88,7 @@ const AdmincontextProvider = (props) => {
 
             if (data.success){
                 setAppointments(data.appointments)
-                console.log(data.appointments)
+                // console.log(data.appointments)
             } else{
                 toast.error(data.message)
             }
@@ -100,7 +101,6 @@ const AdmincontextProvider = (props) => {
         try {
             const { data } = await axios.get(
                 backendUrl + `/api/admin/dashboard`,
-                {},
                 {
                     headers: { adminToken }
                 }
@@ -108,6 +108,7 @@ const AdmincontextProvider = (props) => {
 
             if (data.success) {
                 setDashData(data.dashData);
+                console.log(data.dashData)
             } else {
                 toast.error(data.message);
             }
@@ -115,6 +116,63 @@ const AdmincontextProvider = (props) => {
             toast.error(error.message);
         }
     };
+
+    const getAdminProfile = async () => {
+        try {
+            const { data } = await axios.get(
+                backendUrl + `/api/admin/profile`,
+                {
+                    headers: { adminToken }
+                }
+            )
+
+            if (data.success) {
+                setAdminProfile(data.admin)
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message)
+        }
+    }
+
+    const updateAdminProfile = async (formData) => {
+        try {
+            const { data } = await axios.post(
+                backendUrl + `/api/admin/update-profile`,
+                formData,
+                {
+                    headers: { adminToken }
+                }
+            )
+
+            if (data.success) {
+                setAdminProfile(data.admin)
+                toast.success(data.message)
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message)
+        }
+    }
+
+     const cancelAppointment = async(appointmentId) =>{
+        console.log(appointmentId)
+        try {
+          const {data} = await axios.post(backendUrl + '/api/admin/cancel-appointment',{appointmentId},{headers: {adminToken}})
+          if(data.success){
+            toast.success(data.message)
+            getAllAppointments()
+          }else{
+            toast.error(data.message)
+          }
+          
+        } catch (error) {
+          console.log(error)
+          toast.error(error.message)
+        }
+      }
 
         
 
@@ -131,7 +189,11 @@ const AdmincontextProvider = (props) => {
         appointments,
         setAppointments,
         getDashData,
-        dashData
+        dashData,
+        cancelAppointment,
+        adminProfile,
+        getAdminProfile,
+        updateAdminProfile
        
     };
 

@@ -17,6 +17,7 @@ const authAdminMiddleware =  async (req, res, next) => {
             return res.status(403).json({ success: false, message: 'Forbidden: Not an admin' });
         }
 
+        req.adminEmail = decoded.email;
         next();
         
     } catch (error) {

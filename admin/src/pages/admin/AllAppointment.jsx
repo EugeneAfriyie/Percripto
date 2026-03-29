@@ -1,89 +1,93 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
-import { useContext } from 'react'
-import { useEffect } from 'react'
 import { AppContext } from '../../context/AppContext'
-import { assets } from '../../assets/assets_admin/assets'
-import axios from 'axios'
-import { toast } from 'react-toastify'
-
 
 const AllAppointment = () => {
- 
- 
+  const { calculateAge, slotDateFormat, currencySymbol } = useContext(AppContext)
+  const { getAllAppointments, appointments, adminToken, cancelAppointment } = useContext(AdminContext)
 
-
-  const { calculateAge,slotDateFormat,currencySymbol } = useContext(AppContext)
-  const { getAllAppointments,
-        appointments,
-        setAppointments,
-        adminToken,backendUrl} = useContext(AdminContext)
-
- const cancelAppointment = async(appointmentId) =>{
-    console.log(appointmentId)
-    try {
-      const {data} = await axios.post(backendUrl + '/api/admin/cancel-appointment',{appointmentId},{headers: {adminToken}})
-      if(data.success){
-        toast.success(data.message)
-        getAllAppointments()
-      }else{
-        toast.error(data.message)
-      }
-      
-    } catch (error) {
-      console.log(error)
-      toast.error(error.message)
+  useEffect(() => {
+    if (adminToken) {
+      getAllAppointments()
     }
-  }
-
-
-
-        useEffect(() => {
-          if (adminToken) {
-            getAllAppointments();
-            // console.log(doctors)
-          }
-        }, [adminToken]);
+  }, [adminToken])
 
   return (
-    <div className='w-full max-w-6xl m-5'>
-      <p className='mb-3 text-lg font-medium'>All Appointments</p>
-
-      <div className=" bg-white border rounded text-sm min-h-[60vh] max-h-[80vh] overflow-y-scroll">
-
-        <div className="hidden sm:grid grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] grid-flow-col py-3 px-6 border-b">
-          <p>#</p>
-          <p>Patient</p>
-          <p>Age</p>
-          <p>Date & Time</p>
-          <p>Doctor</p>
-          <p>fee</p>
-          <p>Action</p>
-
+    <div className='w-full p-4 sm:p-6 lg:p-8'>
+      <div className='flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between'>
+        <div>
+          <h1 className='text-2xl font-semibold text-slate-900'>All Appointments</h1>
+          <p className='text-sm text-slate-500'>Review every booking, payment state, and cancellation from one place.</p>
         </div>
-          {appointments.map((item,index) => (
-            <div key={index} className="flex flex-wrap justify-between max-sm:gap-2 sm:grid sm:grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] grid-flow-col py-3 px-6 border-b text-gray-500 hover:bg-gray-50">
-              <p className='max-sm:hidden'>{index + 1}</p>
-              <div className="flex items-center gap-2">
-                <img className='w-8 rounded-full' src={item.userdata.image} alt="" />
-                <p>{item.userdata.name}</p>
+        <div className='rounded-full bg-white px-4 py-2 text-sm text-slate-600 shadow-sm border border-slate-200'>
+          {appointments.length} total appointments
+        </div>
+      </div>
+
+      <div className='mt-6 grid gap-4'>
+        {appointments.length === 0 && (
+          <div className='rounded-3xl border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm'>
+            No appointments found.
+          </div>
+        )}
+
+        {appointments.map((item, index) => (
+          <div key={index} className='rounded-3xl border border-slate-200 bg-white p-5 shadow-sm'>
+            <div className='flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between'>
+              <div className='flex items-center gap-4'>
+                <img className='h-16 w-16 rounded-3xl object-cover' src={item.userdata.image} alt={item.userdata.name} />
+                <div>
+                  <div className='flex flex-wrap items-center gap-2'>
+                    <p className='text-lg font-semibold text-slate-900'>{item.userdata.name}</p>
+                    <span className='rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600'>
+                      {calculateAge(item.userdata.DOB)} yrs
+                    </span>
+                  </div>
+                  <p className='mt-1 text-sm text-slate-500'>{item.userdata.gender || 'Patient'}</p>
+                </div>
               </div>
 
-              <p>{calculateAge(item.userdata.DOB)}</p>
-              {/* <p>{new Date(item.date).toLocaleString()}</p> */}
-              <p>{ slotDateFormat(item.slotdate)},{item.slotTime}</p>
-              <div className="flex items-center gap-2">
-                <img className='w-8 rounded-ful bg-gray-200l' src={item.doctorData.image} alt="" />
-                <p>{item.doctorData.name}</p>
+              <div className='flex flex-wrap gap-2 text-sm text-slate-600'>
+                <span className='rounded-full bg-sky-50 px-3 py-1.5 text-sky-700'>{slotDateFormat(item.slotdate)}</span>
+                <span className='rounded-full bg-slate-100 px-3 py-1.5'>{item.slotTime}</span>
+                <span className='rounded-full bg-violet-50 px-3 py-1.5 text-violet-700'>
+                  {currencySymbol}
+                  {item.doctorData.fee.toFixed(2)}
+                </span>
+                <span className={`rounded-full px-3 py-1.5 ${item.payment ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
+                  {item.payment ? 'Paid' : 'Unpaid'}
+                </span>
               </div>
-              <p>{currencySymbol}{item.doctorData.fee.toFixed(2)}</p>
-              {item.cancelled ?
-              <p className='text-red-400 text-sm font-medium'>Cancelled</p>
-              : 
-              <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />
-                }
             </div>
-          ) )}
+
+            <div className='mt-5 flex flex-col gap-4 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between'>
+              <div className='flex items-center gap-3'>
+                <img className='h-12 w-12 rounded-2xl object-cover bg-slate-100' src={item.doctorData.image} alt={item.doctorData.name} />
+                <div>
+                  <p className='font-medium text-slate-900'>{item.doctorData.name}</p>
+                  <p className='text-sm text-slate-500'>{item.doctorData.speciality}</p>
+                </div>
+              </div>
+
+              <div className='flex flex-wrap items-center gap-3'>
+                {item.cancelled ? (
+                  <span className='rounded-full bg-rose-100 px-4 py-2 text-sm font-medium text-rose-600'>Cancelled</span>
+                ) : (
+                  <button
+                    onClick={() => cancelAppointment(item._id)}
+                    className='rounded-full border border-rose-200 px-4 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-50'
+                  >
+                    Cancel Appointment
+                  </button>
+                )}
+
+                {item.isCompleted && (
+                  <span className='rounded-full bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-700'>Completed</span>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   )

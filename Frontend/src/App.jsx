@@ -10,11 +10,12 @@ import Doctors from './pages/Doctors'
 import My_Profile from './pages/My_Profile'
 import My_Appointment from './pages/My_Appointment'
 import Footer from './components/Footer'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   return (
-    <div className='mx-4 sm:mx-[10%]'>
+    <div className='min-h-screen bg-[radial-gradient(circle_at_top_left,_#eff6ff,_#ffffff_38%,_#f8fafc_100%)]'>
+      <div className='mx-4 sm:mx-[10%]'>
       <Navbar />
       <ToastContainer />
 
@@ -31,7 +32,8 @@ const App = () => {
         <Route path='*' element={<Error />} />
       </Routes>
       <Footer />
-    
+
+      </div>
     </div>
   )
 }
