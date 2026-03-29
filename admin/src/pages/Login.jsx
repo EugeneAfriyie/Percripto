@@ -6,6 +6,11 @@ import { DoctorContext } from '../context/DoctorContext'
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
+const adminPrefix = import.meta.env.VITE_ADMIN_PREFIX || ''
+const doctorPrefix = import.meta.env.VITE_DOCTOR_PREFIX || '/doctor'
+
+const withPrefix = (prefix, path = '') => `${prefix}${path}`
+
 const Login = () => {
   const [state, setState] = useState('Admin')
   const [email, setEmail] = useState('')
@@ -18,7 +23,7 @@ const Login = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    setState(location.pathname.startsWith('/doctor') ? 'Doctor' : 'Admin')
+    setState(location.pathname.startsWith(doctorPrefix) ? 'Doctor' : 'Admin')
   }, [location.pathname])
 
   const handleSubmit = async (e) => {
@@ -36,13 +41,13 @@ const Login = () => {
           setDoctorToken('')
           localStorage.setItem('adminToken', data.token)
           setAdminToken(data.token)
-          navigate('/admin/dashboard')
+          navigate(withPrefix(adminPrefix, '/dashboard'))
         } else {
           localStorage.removeItem('adminToken')
           setAdminToken(null)
           localStorage.setItem('doctorToken', data.token)
           setDoctorToken(data.token)
-          navigate('/doctor/dashboard')
+          navigate(withPrefix(doctorPrefix, '/dashboard'))
         }
         toast.success(`${state} Login Successful`)
       } else {
@@ -96,7 +101,7 @@ const Login = () => {
                 type='button'
                 onClick={() => {
                   setState('Admin')
-                  navigate('/admin/login')
+                  navigate(withPrefix(adminPrefix, '/login'))
                 }}
                 className={`flex-1 rounded-full px-4 py-2 transition ${state === 'Admin' ? 'bg-white text-slate-900 shadow-sm' : ''}`}
               >
@@ -106,7 +111,7 @@ const Login = () => {
                 type='button'
                 onClick={() => {
                   setState('Doctor')
-                  navigate('/doctor/login')
+                  navigate(withPrefix(doctorPrefix, '/login'))
                 }}
                 className={`flex-1 rounded-full px-4 py-2 transition ${state === 'Doctor' ? 'bg-white text-slate-900 shadow-sm' : ''}`}
               >

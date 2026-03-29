@@ -4,13 +4,18 @@ import { AdminContext } from '../context/AdminContext'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { DoctorContext } from '../context/DoctorContext'
 
+const adminPrefix = import.meta.env.VITE_ADMIN_PREFIX || ''
+const doctorPrefix = import.meta.env.VITE_DOCTOR_PREFIX || '/doctor'
+
+const withPrefix = (prefix, path = '') => `${prefix}${path}`
+
 const Navbar = () => {
   const { adminToken, setAdminToken, adminProfile, getAdminProfile } = useContext(AdminContext)
   const { doctorToken, setDoctorToken, doctorProfile } = useContext(DoctorContext)
 
   const navigate = useNavigate()
   const location = useLocation()
-  const isDoctorPortal = doctorToken || location.pathname.startsWith('/doctor')
+  const isDoctorPortal = doctorToken || location.pathname.startsWith(doctorPrefix)
 
   useEffect(() => {
     if (adminToken && !adminProfile) {
@@ -29,7 +34,7 @@ const Navbar = () => {
       localStorage.removeItem('doctorToken')
     }
 
-    navigate(isDoctorPortal ? '/doctor/login' : '/admin/login')
+    navigate(isDoctorPortal ? withPrefix(doctorPrefix, '/login') : withPrefix(adminPrefix, '/login'))
   }
 
   return (

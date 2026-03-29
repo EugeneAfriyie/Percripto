@@ -4,6 +4,11 @@ import { AdminContext } from '../context/AdminContext'
 import { NavLink } from 'react-router-dom'
 import { DoctorContext } from '../context/DoctorContext'
 
+const adminPrefix = import.meta.env.VITE_ADMIN_PREFIX || ''
+const doctorPrefix = import.meta.env.VITE_DOCTOR_PREFIX || '/doctor'
+
+const withPrefix = (prefix, path = '') => `${prefix}${path}`
+
 const Sidebar = () => {
   const { adminToken } = useContext(AdminContext)
   const { doctorToken } = useContext(DoctorContext)
@@ -17,27 +22,27 @@ const Sidebar = () => {
     <div className='min-h-screen bg-white border-r'>
       {adminToken && (
         <ul className='text-[#515151] mt-5'>
-          <NavLink className={navClass} to='/admin/dashboard'>
+          <NavLink className={navClass} to={withPrefix(adminPrefix, '/dashboard')}>
             <img src={assets.home_icon} alt='' />
             <p>Dashboard</p>
           </NavLink>
 
-          <NavLink className={navClass} to='/admin/appointments'>
+          <NavLink className={navClass} to={withPrefix(adminPrefix, '/appointments')}>
             <img src={assets.appointment_icon} alt='' />
             <p>Appointments</p>
           </NavLink>
 
-          <NavLink className={navClass} to='/admin/add-doctor'>
+          <NavLink className={navClass} to={withPrefix(adminPrefix, '/add-doctor')}>
             <img src={assets.add_icon} alt='' />
             <p>Add Doctor</p>
           </NavLink>
 
-          <NavLink className={navClass} to='/admin/doctors'>
+          <NavLink className={navClass} to={withPrefix(adminPrefix, '/doctors')}>
             <img src={assets.people_icon} alt='' />
             <p>Doctors</p>
           </NavLink>
 
-          <NavLink className={navClass} to='/admin/profile'>
+          <NavLink className={navClass} to={withPrefix(adminPrefix, '/profile')}>
             <img src={assets.doctor_icon} alt='' />
             <p>Profile</p>
           </NavLink>
@@ -46,17 +51,17 @@ const Sidebar = () => {
 
       {doctorToken && (
         <ul className='text-[#515151] mt-5'>
-          <NavLink className={navClass} to='/doctor/dashboard'>
+          <NavLink className={navClass} to={withPrefix(doctorPrefix, '/dashboard')}>
             <img src={assets.home_icon} alt='' />
             <p>Overview</p>
           </NavLink>
 
-          <NavLink className={navClass} to='/doctor/appointments'>
+          <NavLink className={navClass} to={withPrefix(doctorPrefix, '/appointments')}>
             <img src={assets.appointment_icon} alt='' />
             <p>Appointments</p>
           </NavLink>
 
-          <NavLink className={navClass} to='/doctor/profile'>
+          <NavLink className={navClass} to={withPrefix(doctorPrefix, '/profile')}>
             <img src={assets.doctor_icon} alt='' />
             <p>My Profile</p>
           </NavLink>

@@ -15,14 +15,23 @@ import DoctorProfile from './pages/doctors/DoctorProfile'
 import DoctorDashboard from './pages/doctors/DoctorDashboard'
 import DoctorAppointment from './pages/doctors/DoctorAppointment'
 
+const adminPrefix = import.meta.env.VITE_ADMIN_PREFIX || ''
+const doctorPrefix = import.meta.env.VITE_DOCTOR_PREFIX || '/doctor'
+
+const withPrefix = (prefix, path = '') => `${prefix}${path}`
+
 const App = () => {
   const { adminToken, setAdminToken } = useContext(AdminContext)
   const { doctorToken, setDoctorToken } = useContext(DoctorContext)
   const location = useLocation()
 
-  const isDoctorPath = location.pathname.startsWith('/doctor')
-  const loginRoute = isDoctorPath ? '/doctor/login' : '/admin/login'
-  const defaultRoute = adminToken ? '/admin/dashboard' : '/doctor/dashboard'
+  const isDoctorPath = location.pathname.startsWith(doctorPrefix)
+  const adminLoginRoute = withPrefix(adminPrefix, '/login')
+  const doctorLoginRoute = withPrefix(doctorPrefix, '/login')
+  const adminDashboardRoute = withPrefix(adminPrefix, '/dashboard')
+  const doctorDashboardRoute = withPrefix(doctorPrefix, '/dashboard')
+  const loginRoute = isDoctorPath ? doctorLoginRoute : adminLoginRoute
+  const defaultRoute = adminToken ? adminDashboardRoute : doctorDashboardRoute
 
   useEffect(() => {
     if (adminToken) {
@@ -64,11 +73,11 @@ const App = () => {
     return (
       <>
         <Routes>
-          <Route path='/' element={<Navigate to='/admin/login' replace />} />
-          <Route path='/admin' element={<Navigate to='/admin/login' replace />} />
-          <Route path='/doctor' element={<Navigate to='/doctor/login' replace />} />
-          <Route path='/admin/login' element={<Login />} />
-          <Route path='/doctor/login' element={<Login />} />
+          <Route path='/' element={<Navigate to={adminLoginRoute} replace />} />
+          <Route path={adminPrefix || '/admin'} element={<Navigate to={adminLoginRoute} replace />} />
+          <Route path={doctorPrefix} element={<Navigate to={doctorLoginRoute} replace />} />
+          <Route path={adminLoginRoute} element={<Login />} />
+          <Route path={doctorLoginRoute} element={<Login />} />
           <Route path='*' element={<Navigate to={loginRoute} replace />} />
         </Routes>
         <ToastContainer position='top-right' autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
@@ -85,21 +94,21 @@ const App = () => {
         <Sidebar />
         <Routes>
           <Route path='/' element={<Navigate to={defaultRoute} replace />} />
-          <Route path='/admin' element={<Navigate to='/admin/dashboard' replace />} />
-          <Route path='/doctor' element={<Navigate to='/doctor/dashboard' replace />} />
+          <Route path={adminPrefix || '/admin'} element={<Navigate to={adminDashboardRoute} replace />} />
+          <Route path={doctorPrefix} element={<Navigate to={doctorDashboardRoute} replace />} />
 
-          <Route path='/admin/dashboard' element={<DashBoard />} />
-          <Route path='/admin/appointments' element={<AllAppointment />} />
-          <Route path='/admin/add-doctor' element={<AddDoc />} />
-          <Route path='/admin/doctors' element={<DocList />} />
-          <Route path='/admin/profile' element={<AdminProfile />} />
+          <Route path={adminDashboardRoute} element={<DashBoard />} />
+          <Route path={withPrefix(adminPrefix, '/appointments')} element={<AllAppointment />} />
+          <Route path={withPrefix(adminPrefix, '/add-doctor')} element={<AddDoc />} />
+          <Route path={withPrefix(adminPrefix, '/doctors')} element={<DocList />} />
+          <Route path={withPrefix(adminPrefix, '/profile')} element={<AdminProfile />} />
 
-          <Route path='/doctor/dashboard' element={<DoctorDashboard />} />
-          <Route path='/doctor/profile' element={<DoctorProfile />} />
-          <Route path='/doctor/appointments' element={<DoctorAppointment />} />
+          <Route path={doctorDashboardRoute} element={<DoctorDashboard />} />
+          <Route path={withPrefix(doctorPrefix, '/profile')} element={<DoctorProfile />} />
+          <Route path={withPrefix(doctorPrefix, '/appointments')} element={<DoctorAppointment />} />
 
-          <Route path='/admin/login' element={<Navigate to='/admin/dashboard' replace />} />
-          <Route path='/doctor/login' element={<Navigate to='/doctor/dashboard' replace />} />
+          <Route path={adminLoginRoute} element={<Navigate to={adminDashboardRoute} replace />} />
+          <Route path={doctorLoginRoute} element={<Navigate to={doctorDashboardRoute} replace />} />
           <Route path='*' element={<Navigate to={defaultRoute} replace />} />
         </Routes>
       </div>
